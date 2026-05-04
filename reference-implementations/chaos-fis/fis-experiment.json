@@ -1,0 +1,32 @@
+{
+    "description": "RDS Failover Chaos Experiment",
+    "targets": {
+        "DBCluster": {
+            "resourceType": "aws:rds:cluster",
+            "resourceArns": [
+                "arn:aws:rds:us-east-1:123456789012:cluster:my-aurora-cluster"
+            ],
+            "selectionMode": "ALL"
+        }
+    },
+    "actions": {
+        "TriggerFailover": {
+            "actionId": "aws:rds:failover-db-cluster",
+            "parameters": {},
+            "targets": {
+                "Clusters": "DBCluster"
+            }
+        }
+    },
+    "stopConditions": [
+        {
+            "source": "aws:cloudwatch:alarm",
+            "value": "arn:aws:cloudwatch:us-east-1:123456789012:alarm:CriticalLatencyAlarm"
+        }
+    ],
+    "roleArn": "arn:aws:iam::123456789012:role/FISExperimentRole",
+    "tags": {
+        "Environment": "Stage",
+        "Team": "QE"
+    }
+}
